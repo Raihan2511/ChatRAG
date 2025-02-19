@@ -8,8 +8,13 @@ load_dotenv()
 
 # Remote MySQL Server Configuration
 # Database connection details
-username = 'root'
-password = ''
+# username = 'root'
+# password = ''
+# hostname = 'localhost'
+# port = '3306'
+# database_name = 'chat_application'
+username = 'raihan'
+password = 'Raihan%402025'
 hostname = 'localhost'
 port = '3306'
 database_name = 'chat_application'
