@@ -3,3 +3,5 @@ sqlalchemy
 passlib
 python-dotenv
 ollama
+pymysql
+mysql-connector-python
