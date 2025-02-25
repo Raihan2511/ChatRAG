@@ -5,3 +5,13 @@ python-dotenv
 ollama
 pymysql
 mysql-connector-python
+bcrypt
+streamlit-google-auth
+langchain
+langchain-community
+langchain-experimental
+faiss-cpu
+pdfplumber
+torch
+transformers
+sentence-transformers
