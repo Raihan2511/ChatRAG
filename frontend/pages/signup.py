@@ -1,21 +1,22 @@
-from backend.models.user import User
 import streamlit as st
-from backend.auth.authentication import create_user
-from backend.models.database import get_db
-from sqlalchemy.orm import Session
+from backend.services.auth_service import create_user
 
-def show():
+def show(set_page):
     st.title("Sign Up")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+    confirm_password = st.text_input("Confirm Password", type="password")
 
     if st.button("Sign Up"):
-        db: Session = next(get_db())
-
-        if db.query(User).filter(User.username == username).first():
-            st.error("Username already exists!")
+        if not username or not password:
+            st.warning("Please fill all fields.")
+        elif password != confirm_password:
+            st.error("Passwords do not match.")
         else:
-            create_user(db, username, password)
-            st.success("User created! Please log in.")
-
+            user = create_user(username, password)
+            if user:
+                st.success("Account created! Redirecting to login...")
+                set_page("Login")  # Redirect to login
+            else:
+                st.error("Username already exists. Choose another one.")

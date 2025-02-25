@@ -1,21 +1,21 @@
 import streamlit as st
-from backend.auth.authentication import verify_password
-from backend.models.database import get_db
-from backend.models.user import User
-from sqlalchemy.orm import Session
+from backend.services.auth_service import authenticate_user
 
-def show():
+def show(set_page):
     st.title("Login")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        db: Session = next(get_db())
-        user = db.query(User).filter(User.username == username).first()
-        
-        if user and verify_password(password, user.password):
-            st.session_state["authenticated"] = True
-            st.success("Login successful! You can now chat.")
+        user = authenticate_user(username, password)
+        if user:
+            st.session_state["user_id"] = user.id
+            st.success("Login successful! Redirecting to chat...")
+            set_page("Chat")  # Redirect to chat page
         else:
-            st.error("Invalid username or password")
+            st.error("Invalid username or password.")
+            
+    st.button("Go to Sign Up", on_click=lambda: set_page("Sign Up"))
+
+

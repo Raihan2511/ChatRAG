@@ -1,26 +1,9 @@
-import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-from dotenv import load_dotenv
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from config import DATABASE_URL
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Remote MySQL Server Configuration
-# Database connection details
-# username = 'root'
-# password = ''
-# hostname = 'localhost'
-# port = '3306'
-# database_name = 'chat_application'
-username = 'raihan'
-password = 'Raihan%402025'
-hostname = 'localhost'
-port = '3306'
-database_name = 'chat_application'
-
-# Connect to MySQL database
-engine = create_engine(f'mysql+mysqlconnector://{username}:{password}@{hostname}:{port}/{database_name}')
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
