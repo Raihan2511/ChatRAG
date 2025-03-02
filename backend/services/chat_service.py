@@ -20,7 +20,7 @@ def generate_response(user_input: str, use_rag=False, qa=None):
 
 # ✅ Function to save messages in chat history
 def save_chat_message(user_id: int, message: str, response: str, chat_id=None):
-    """Save chat messages (Both RAG and normal chat)."""
+    """Save chat messages under the correct chat session."""
     db: Session = next(get_db())
     try:
         if not user_id:
@@ -28,13 +28,19 @@ def save_chat_message(user_id: int, message: str, response: str, chat_id=None):
             return None
 
         if chat_id:
+            # ✅ Append to the existing chat session instead of creating a new one
             chat = db.query(ChatHistory).filter(ChatHistory.id == chat_id).first()
-            title = chat.title if chat else "Untitled Chat"
-        else:
-            title = message[:30] + "..." if len(message) > 30 else message
+            if chat:
+                title = chat.title  # ✅ Keep the same title
+            else:
+                print("⚠ Chat ID not found, creating a new chat session!")
+                chat_id = None  # ✅ Reset chat_id to create a new session
+
+        if not chat_id:
+            title = message[:30] + "..." if len(message) > 30 else message  # ✅ Generate title only for the first message
 
         chat_entry = ChatHistory(user_id=user_id, title=title, message=message, response=response)
-        
+
         db.add(chat_entry)
         db.commit()
         db.refresh(chat_entry)
@@ -48,7 +54,6 @@ def save_chat_message(user_id: int, message: str, response: str, chat_id=None):
         return None
     finally:
         db.close()
-
 # ✅ Function to retrieve chat history
 def get_chat_history(user_id: int, title: str = None):
     """Retrieve chat history by user, optionally filtering by title."""

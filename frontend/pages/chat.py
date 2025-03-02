@@ -104,20 +104,26 @@ def show():
         # ✅ Define LLM & Prompt
         llm = Ollama(model="deepseek-r1:1.5b")
         prompt = """
-        Use the following pieces of context to answer the question:
+        1. Use the following pieces of context to answer the question at the end.
+        2. If you don't know the answer, just say that "I don't know" but don't make up an answer on your own.\n
+        3. Keep the answer crisp and limited to 3,4 sentences.
         Context: {context}
         Question: {question}
-        Answer:"""
+        Helpful Answer:"""
         QA_CHAIN_PROMPT = PromptTemplate.from_template(prompt)
         
         llm_chain = LLMChain(llm=llm, prompt=QA_CHAIN_PROMPT, verbose=True)
-        document_prompt = PromptTemplate(input_variables=["page_content"], template="Context:\n{page_content}")
+        document_prompt = PromptTemplate(
+            input_variables=["page_content", "source"],
+            template="Context:\n{page_content}\nSource: {source}"
+        )
         
         combine_documents_chain = StuffDocumentsChain(
             llm_chain=llm_chain, document_variable_name="context", document_prompt=document_prompt, verbose=True
         )
 
-        qa = RetrievalQA(combine_documents_chain=combine_documents_chain, retriever=retriever, verbose=True)
+        qa = RetrievalQA(combine_documents_chain=combine_documents_chain, retriever=retriever, verbose=True,return_source_documents=True
+)
 
     # ✅ Chat UI
     st.title("Chat with AI / Ask About Your PDF")
@@ -140,18 +146,27 @@ def show():
         st.session_state["current_chat_id"] = None
         st.rerun()
 
-    search_query = st.sidebar.text_input("Search chats...")
+    search_query = st.sidebar.text_input("Search chats...", placeholder="Enter keywords to search chat history")
 
-    # ✅ Sidebar: Show unique chat titles
-    unique_titles = {chat.title for chat in chat_history_db}  # ✅ Store only unique titles
+    # ✅ Filter chat titles based on search query
+    filtered_chats = [
+        chat for chat in chat_history_db if search_query.lower() in chat.title.lower()
+    ] if search_query else chat_history_db  # Show all chats if no search input
+
+    # ✅ Sidebar: Show unique filtered chat titles
+    unique_titles = {chat.title for chat in filtered_chats}  # ✅ Store only unique titles
 
     for title in unique_titles:
         if st.sidebar.button(title, key=f"title_{title}"):
-            st.session_state["current_chat_title"] = title
-            st.session_state["chat_history"] = [
-                (c.message, c.response) for c in get_chat_history(user_id, title=title)
-            ]
+            st.session_state["current_chat_title"] = title  # ✅ Store selected chat title
+            selected_chat = [c for c in chat_history_db if c.title == title]
+
+            if selected_chat:
+                st.session_state["current_chat_id"] = selected_chat[0].id  # ✅ Store chat ID for saving new messages
+                st.session_state["chat_history"] = [(c.message, c.response) for c in selected_chat]
+
             st.rerun()
+
 
     # ✅ Display chat messages dynamically
     for message, response in st.session_state["chat_history"]:
@@ -168,6 +183,7 @@ def show():
     if st.button("Send"):
         if user_input:
             response = generate_response(user_input, use_rag=(qa is not None), qa=qa)
+            print(response)
 
             st.session_state["chat_history"].append((user_input, response))
 
