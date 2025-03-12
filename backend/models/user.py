@@ -10,3 +10,5 @@ class User(Base):
     password = Column(String(255), nullable=False)
 
     chats = relationship("ChatHistory", back_populates="user", cascade="all, delete-orphan")
+    cache = relationship("Cache", back_populates="user", cascade="all, delete-orphan")
+

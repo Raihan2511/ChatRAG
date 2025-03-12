@@ -1,7 +1,8 @@
 from backend.models.database import Base, engine
 from backend.models.user import User
-from backend.models.logs import Log
+# from backend.models.logs import Log
 from backend.models.chat_history import ChatHistory
+from backend.models.cache import Cache
 from sqlalchemy.exc import SQLAlchemyError
 
 def initialize_db():
