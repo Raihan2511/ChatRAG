@@ -182,7 +182,7 @@ def show():
 
     if st.button("Send"):
         if user_input:
-            response = generate_response(user_input, use_rag=(qa is not None), qa=qa)
+            response = generate_response(user_input,user_id, use_rag=(qa is not None), qa=qa)
             print(response)
 
             st.session_state["chat_history"].append((user_input, response))

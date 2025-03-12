@@ -1,22 +1,109 @@
 import ollama
-from sqlalchemy.orm import Session
 from backend.models.database import get_db
 from backend.models.chat_history import ChatHistory
+from backend.models.cache import Cache
+from sqlalchemy.orm import Session
+from difflib import SequenceMatcher
 
-# ✅ Function to generate AI responses
-def generate_response(user_input: str, use_rag=False, qa=None):
-    """Generate response from DeepSeek R1 (Regular chat or RAG-based)."""
+# Function to compute similarity between two questions
+def compute_similarity(q1, q2):
+    return SequenceMatcher(None, q1.lower(), q2.lower()).ratio()
+
+# Function to check cache for a similar question
+def check_cache(db: Session, user_input: str):
+    cache_entries = db.query(Cache).all()
+
+    for entry in cache_entries:
+        if compute_similarity(user_input, entry.question) > 0.85:  # Similarity threshold
+            return entry.response
+    
+    return None
+
+# Function to search chat history for a similar question
+def search_history(db: Session, user_input: str):
+    history_entries = db.query(ChatHistory).all()
+
+    for entry in history_entries:
+        if compute_similarity(user_input, entry.message) > 0.85:  # Similarity threshold
+            return entry.response
+    
+    return None
+
+# Function to store response in cache
+def store_in_cache(db: Session, user_id: int, question: str, response: str):
+    existing_entry = db.query(Cache).filter(Cache.question == question).first()
+
+    if existing_entry:
+        existing_entry.frequency += 1  # Update frequency
+    else:
+        # Ensure only 5 items in cache (remove least frequent if full)
+        cache_count = db.query(Cache).count()
+        if cache_count >= 5:
+            least_frequent = db.query(Cache).order_by(Cache.frequency.asc()).first()
+            if least_frequent:
+                db.delete(least_frequent)
+        
+        new_cache_entry = Cache(user_id=user_id, question=question, response=response, frequency=1)
+        db.add(new_cache_entry)
+
+    db.commit()
+
+# Function to store response in chat history
+def store_in_history(db: Session, user_id: int, question: str, response: str, title: str = "Chat Session"):
+    new_history = ChatHistory(user_id=user_id, title=title, message=question, response=response)
+    db.add(new_history)
+    db.commit()
+
+# Main function to generate response
+def generate_response(user_input: str, user_id: int, use_rag=False, qa=None):
+    """Generate response from DeepSeek R1 (Regular chat or RAG-based) with cache & history."""
+    db: Session = next(get_db())
+
     try:
+        # Step 1: Check cache
+        cached_response = check_cache(db, user_input)
+        if cached_response:
+            return cached_response
+
+        # Step 2: Check chat history
+        history_response = search_history(db, user_input)
+        if history_response:
+            return history_response
+
+        # Step 3: Generate response using RAG or LLM
         if use_rag and qa:
-            response = qa(user_input)["result"]  # Use RetrievalQA if enabled
+            response = qa(user_input)["result"]
         else:
             response = ollama.chat(model="deepseek-r1:1.5b", messages=[{"role": "user", "content": user_input}])
             response = response["message"]["content"]
-        
+
+        # Step 4: Store response in history and update cache
+        # save_chat_message(db, user_id, user_input, response)
+        store_in_cache(db, user_id, user_input, response)
+
         return response
+
     except Exception as e:
         print(f"❌ Error generating response: {e}")
         return "I'm having trouble responding. Please try again."
+
+    finally:
+        db.close()
+
+# ✅ Function to generate AI responses
+# def generate_response(user_input: str, use_rag=False, qa=None):
+#     """Generate response from DeepSeek R1 (Regular chat or RAG-based)."""
+#     try:
+#         if use_rag and qa:
+#             response = qa(user_input)["result"]  # Use RetrievalQA if enabled
+#         else:
+#             response = ollama.chat(model="deepseek-r1:1.5b", messages=[{"role": "user", "content": user_input}])
+#             response = response["message"]["content"]
+        
+#         return response
+#     except Exception as e:
+#         print(f"❌ Error generating response: {e}")
+#         return "I'm having trouble responding. Please try again."
 
 # ✅ Function to save messages in chat history
 def save_chat_message(user_id: int, message: str, response: str, chat_id=None):
