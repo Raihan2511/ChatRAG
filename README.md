@@ -1,79 +1,91 @@
-# ChatGPT Clone with DeepSeek R1 and RAG Integration
+# 🚀 ChatGPT Clone with DeepSeek R1 & RAG-Powered PDF Q&A  
 
-## 📌 Project Overview
-This project is a **ChatGPT Clone** built using **Streamlit**, integrating **DeepSeek R1 (1.5B)** for AI chat responses and **Retrieval-Augmented Generation (RAG)** for answering PDF-based questions. It provides a seamless conversational experience with memory retention and allows users to extract information from uploaded documents.
+## 📌 Project Overview  
+This project is a **ChatGPT-like AI Assistant** built using **Streamlit**, powered by a **Large Language Model (LLM)**—**DeepSeek R1 (1.5B)**—for intelligent conversation. It seamlessly integrates **Retrieval-Augmented Generation (RAG)**, enabling users to **upload PDFs** and ask questions based on the document’s content.  
 
-## ✨ Features
-✅ **ChatGPT-Like UI** with a sidebar for chat history  
-✅ **DeepSeek R1 (1.5B) Model** for AI-based chat  
-✅ **Full Chat Memory** - AI remembers previous messages in a session  
-✅ **RAG Integration** - Upload a PDF and ask questions about it  
-✅ **MySQL Database** - Stores chat history and user authentication  
-✅ **Session Persistence** - Chats remain active after page refresh  
-✅ **Auto-Scrolling Chat** for a seamless experience  
-✅ **Efficient Search Feature** - Users can quickly find past conversations  
-✅ **Chat Categorization** - Organize chats by topic or session  
+With **real-time chat history storage** in **MySQL**, users can continue conversations across sessions without losing context. The chatbot supports both **free-text AI conversation** and **document-based Q&A**, making it a **powerful hybrid AI assistant**.  
 
+## ✨ Key Features  
+👉 **Conversational AI with LLM** – Chat with **DeepSeek R1 (1.5B)** like ChatGPT  
+👉 **Retrieval-Augmented Generation (RAG)** – Ask questions about uploaded PDFs  
+👉 **Persistent Chat Memory** – AI retains chat history for seamless conversations  
+👉 **MySQL-Backed Chat History** – Stores past conversations for easy retrieval  
+👉 **Real-Time Sidebar Chat History** – Quickly access previous discussions  
+👉 **Auto-Generated Titles** – Organizes chat sessions efficiently  
+👉 **Smooth UI with Auto-Scrolling** – Fast and intuitive user experience  
 
-### 3️⃣ **Install Dependencies**
-```bash
-pip install -r requirements.txt
-```
+## ⚙️ How It Works  
 
-### 4️⃣ **Start the MySQL Database**
-Ensure MySQL is running and update **`backend/models/database.py`** with your credentials.
+### 🔹 **1. LLM-Powered Chat**  
+- The chatbot uses **DeepSeek R1 (1.5B)**, a **Large Language Model (LLM)** optimized for **natural language understanding and generation**.  
+- Users can interact **just like ChatGPT**, receiving **intelligent responses** based on context.  
 
-### 5️⃣ **Initialize Database**
-```bash
-python backend/models/database.py
-```
+### 🔹 **2. RAG-Based PDF Q&A**  
+- Users can **upload PDFs** (e.g., reports, research papers, contracts).  
+- The system extracts text, converts it into **vector embeddings**, and stores it in **FAISS (vector search database)**.  
+- When users ask a question, the **retrieval module** finds the most relevant parts of the document.  
+- The **LLM (DeepSeek R1)** then generates a response **using both retrieved content & its general knowledge**.  
 
-### 6️⃣ **Run DeepSeek R1 Locally**
-Ensure Ollama and DeepSeek R1 are installed:
-```bash
-ollama pull deepseek-r1:1.5b
-ollama serve
-```
+### 🔹 **3. Efficient Chat History Management**  
+- **All chat messages** are stored in **MySQL**, linked to each user.  
+- The sidebar **displays past chat sessions**, enabling users to **resume conversations anytime**.  
+- A **search function** allows users to find **specific past interactions** quickly.  
 
-### 7️⃣ **Start the ChatGPT Clone**
-```bash
-streamlit run app.py
-```
+## 🏰 Tech Stack  
+| Component   | Technology Used   |  
+|------------|------------------|  
+| **Frontend**  | Streamlit (UI Framework)  |  
+| **Backend**  | Python (FastAPI for Database Operations)  |  
+| **LLM (AI Model)**  | DeepSeek R1 (1.5B) via Ollama  |  
+| **Database**  | MySQL (Chat History & User Data)  |  
+| **RAG System**  | FAISS (Vector Database for Document Retrieval)  |  
+| **Authentication**  | Secure User Login System  |  
 
-## 📝 Usage
-1️⃣ **Sign Up & Log In** to access the chat.  
-2️⃣ **Chat with DeepSeek R1** just like ChatGPT.  
-3️⃣ **Upload a PDF** (in the sidebar) and ask questions about it.  
-4️⃣ **Click on a chat title in the sidebar** to load past conversations.  
-5️⃣ **Continue conversations seamlessly** from saved chats.  
+## 📌 Installation Guide  
 
-## 🛠 Technologies Used
-- **Frontend:** Streamlit
-- **Backend:** Python (FastAPI for database operations)
-- **Database:** MySQL
-- **AI Model:** DeepSeek R1 (1.5B) via Ollama
-- **Vector Search:** FAISS (for RAG PDF search)
+### 1️⃣ **Install Dependencies**  
+```bash  
+pip install -r requirements.txt  
+```  
 
-## ⚡ API Endpoints (If Needed)
-| Endpoint       | Method | Description             |
-|---------------|--------|-------------------------|
-| `/chat`       | POST   | Get AI response         |
-| `/upload`     | POST   | Upload and process PDF  |
-| `/history`    | GET    | Retrieve chat history   |
+### 2️⃣ **Start MySQL & Initialize Database**  
+Ensure MySQL is running and update **`config.py`** with your credentials:  
+```bash  
+python init_db.py
+```  
 
-## 📌 Future Improvements
-🔹 Add support for **Google Login**  
-🔹 Implement **voice-based chat**  
-🔹 Enable **multimodal AI (images & text)**  
-🔹 Improve **response personalization** using user-specific context  
-🔹 Enhance **document processing speed** for faster retrieval  
+### 3️⃣ **Run DeepSeek R1 Locally**  
+Ensure **Ollama** and **DeepSeek R1** are installed:  
+```bash  
+ollama pull deepseek-r1:1.5b  
+ollama serve  
+```  
 
-## 💡 Contributing
-Pull requests are welcome! Feel free to fork the repo and submit changes.
+### 4️⃣ **Start the ChatGPT Clone**  
+```bash  
+streamlit run app.py  
+```  
 
-## 📜 License
-This project is open-source under the **MIT License**.
+## 📝 How to Use  
+1️⃣ **Sign Up & Log In** – Access the chat system.  
+2️⃣ **Chat with AI (LLM)** – Just like ChatGPT, but powered by **DeepSeek R1**.  
+3️⃣ **Upload a PDF** – Ask questions about it, and the **RAG system retrieves** relevant information.  
+4️⃣ **Resume Previous Conversations** – Click on a chat title in the sidebar.  
+5️⃣ **Search Past Chats** – Quickly find specific discussions.  
 
----
-🎉 **Enjoy chatting with your AI assistant!** 🚀
+## 🚀 Future Improvements  
+🔹 **Google Login Integration** for seamless authentication  
+🔹 **Voice-Based AI Chat** for hands-free interaction  
+🔹 **Multimodal AI (Images & Text)** to analyze both text and visuals  
+🔹 **Enhanced Response Personalization** based on user behavior  
+
+## 💡 Contributing  
+Pull requests are welcome! Fork the repo and submit changes to improve the AI system.  
+
+## 🐝 License  
+This project is open-source under the **MIT License**.  
+
+---  
+
+🎉 **Enjoy your AI-powered chatbot with LLM & RAG!** 🚀 Let me know if you need any further modifications!
 
