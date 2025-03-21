@@ -83,9 +83,5 @@ streamlit run app.py
 Pull requests are welcome! Fork the repo and submit changes to improve the AI system.  
 
 ## 🐝 License  
-This project is open-source under the **MIT License**.  
-
----  
-
-🎉 **Enjoy your AI-powered chatbot with LLM & RAG!** 🚀 Let me know if you need any further modifications!
+This project is open-source under the **MIT License**. 
 
