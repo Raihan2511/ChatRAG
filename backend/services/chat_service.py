@@ -1,4 +1,5 @@
 import ollama
+import google.generativeai as genai
 from backend.models.database import get_db
 from backend.models.chat_history import ChatHistory
 from backend.models.cache import Cache
@@ -55,8 +56,43 @@ def store_in_history(db: Session, user_id: int, question: str, response: str, ti
     db.commit()
 
 # Main function to generate response
+# def generate_response(user_input: str, user_id: int, use_rag=False, qa=None):
+#     """Generate response from DeepSeek R1 (Regular chat or RAG-based) with cache & history."""
+#     db: Session = next(get_db())
+
+#     try:
+#         # Step 1: Check cache
+#         cached_response = check_cache(db, user_input)
+#         if cached_response:
+#             return cached_response
+
+#         # Step 2: Check chat history
+#         history_response = search_history(db, user_input)
+#         if history_response:
+#             return history_response
+
+#         # Step 3: Generate response using RAG or LLM
+#         if use_rag and qa:
+#             response = qa(user_input)["result"]
+#         else:
+#             response = ollama.chat(model="deepseek-r1:1.5b", messages=[{"role": "user", "content": user_input}])
+#             response = response["message"]["content"]
+
+#         # Step 4: Store response in history and update cache
+#         # save_chat_message(db, user_id, user_input, response)
+#         store_in_cache(db, user_id, user_input, response)
+
+#         return response
+
+#     except Exception as e:
+#         print(f"❌ Error generating response: {e}")
+#         return "I'm having trouble responding. Please try again."
+
+#     finally:
+#         db.close()
+
 def generate_response(user_input: str, user_id: int, use_rag=False, qa=None):
-    """Generate response from DeepSeek R1 (Regular chat or RAG-based) with cache & history."""
+    """Generate response from Gemini 2.0 Flash or RAG-based system with cache & history."""
     db: Session = next(get_db())
 
     try:
@@ -70,12 +106,16 @@ def generate_response(user_input: str, user_id: int, use_rag=False, qa=None):
         if history_response:
             return history_response
 
-        # Step 3: Generate response using RAG or LLM
+        # Step 3: Generate response using RAG or Gemini
         if use_rag and qa:
             response = qa(user_input)["result"]
         else:
-            response = ollama.chat(model="deepseek-r1:1.5b", messages=[{"role": "user", "content": user_input}])
-            response = response["message"]["content"]
+            print("🔹 Sending request to Gemini...")
+            gemini_model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp")
+            messages = [{"role": "user", "parts": [user_input]}]
+            response = gemini_model.generate_content(messages).text
+            print(f"✅ Gemini Response: {response}")
+            # log_action(db, user_id, "Generated Response (Gemini)", user_input)
 
         # Step 4: Store response in history and update cache
         # save_chat_message(db, user_id, user_input, response)
@@ -85,10 +125,11 @@ def generate_response(user_input: str, user_id: int, use_rag=False, qa=None):
 
     except Exception as e:
         print(f"❌ Error generating response: {e}")
-        return "I'm having trouble responding. Please try again."
+        return "An error occurred while generating the response."
 
     finally:
         db.close()
+
 
 # ✅ Function to generate AI responses
 # def generate_response(user_input: str, use_rag=False, qa=None):

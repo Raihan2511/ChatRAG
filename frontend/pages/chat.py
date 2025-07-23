@@ -1,5 +1,7 @@
 import streamlit as st
 import time
+import os
+from dotenv import load_dotenv
 from backend.services.chat_service import generate_response, save_chat_message, get_chat_history
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_experimental.text_splitter import SemanticChunker
@@ -10,6 +12,13 @@ from langchain.prompts import PromptTemplate
 from langchain.chains.llm import LLMChain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains import RetrievalQA
+# from langchain_community.llms import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+import google.generativeai as genai
+
+load_dotenv()
+api_key = os.getenv("api_key")
+genai.configure(api_key=api_key)
 
 def auto_scroll():
     """Auto-scroll to the latest message in chat."""
@@ -102,7 +111,9 @@ def show():
         retriever = vector.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
         # ✅ Define LLM & Prompt
-        llm = Ollama(model="deepseek-r1:1.5b")
+        # llm = Ollama(model="deepseek-r1:1.5b")
+        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-thinking-exp", google_api_key=api_key)
+
         prompt = """
         1. Use the following pieces of context to answer the question at the end.
         2. If you don't know the answer, just say that "I don't know" but don't make up an answer on your own.\n

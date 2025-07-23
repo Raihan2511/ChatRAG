@@ -15,3 +15,7 @@ pdfplumber
 torch
 transformers
 sentence-transformers
+openai
+genai
+langchain-google-genai
+google-generativeai
