@@ -1,10 +1,4 @@
-import os
-from dotenv import load_dotenv
+import streamlit as st
 
-load_dotenv()
-
-# MySQL Database Configuration
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL environment variable is not set.")
+# Use secrets from Streamlit Cloud
+DATABASE_URL = st.secrets["DATABASE_URL"]
