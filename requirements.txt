@@ -20,3 +20,4 @@ genai
 langchain-google-genai
 google-generativeai
 psycopg2-binary
+tiktoken
