@@ -15,3 +15,4 @@ __pycache__/
 *.bak
 *.tmp
 config.py
+secrets.toml

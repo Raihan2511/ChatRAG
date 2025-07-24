@@ -17,7 +17,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 import google.generativeai as genai
 
 load_dotenv()
-api_key = os.getenv("api_key")
+api_key = st.secrets["api_key"]
 genai.configure(api_key=api_key)
 
 def auto_scroll():

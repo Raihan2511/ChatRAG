@@ -1,10 +1,7 @@
-import os
+import streamlit as st
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # MySQL Database Configuration
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
-    "mysql+mysqlconnector://root:@localhost:3306/chat_application"
-)
+DATABASE_URL = st.secrets["DATABASE_URL"]  # Use secrets for sensitive data
