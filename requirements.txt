@@ -18,4 +18,4 @@ sentence-transformers
 genai
 langchain-google-genai
 google-generativeai
-psycopg2
+psycopg2-binary
