@@ -12,11 +12,10 @@ langchain-community
 langchain-experimental
 faiss-cpu
 pdfplumber
-torch
+# torch
 transformers
 sentence-transformers
 genai
 langchain-google-genai
 google-generativeai
 psycopg2-binary
-tiktoken==0.3.3
