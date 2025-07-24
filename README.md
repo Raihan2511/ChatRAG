@@ -1,87 +1,107 @@
-# 🚀 ChatGPT Clone with DeepSeek R1 & RAG-Powered PDF Q&A  
+# Chatrag - AI Chatbot with PDF-Based RAG and Multi-LLM Support
 
-## 📌 Project Overview  
-This project is a **ChatGPT-like AI Assistant** built using **Streamlit**, powered by a **Large Language Model (LLM)**—**DeepSeek R1 (1.5B)**—for intelligent conversation. It seamlessly integrates **Retrieval-Augmented Generation (RAG)**, enabling users to **upload PDFs** and ask questions based on the document’s content.  
+Chatrag is a ChatGPT-style AI assistant that supports both free-form conversation and document-based question answering. Built with Streamlit, it integrates multiple large language models (LLMs) and uses Retrieval-Augmented Generation (RAG) to answer questions based on uploaded PDF documents.
 
-With **real-time chat history storage** in **MySQL**, users can continue conversations across sessions without losing context. The chatbot supports both **free-text AI conversation** and **document-based Q&A**, making it a **powerful hybrid AI assistant**.  
+## Features
 
-## ✨ Key Features  
-👉 **Conversational AI with LLM** – Chat with **DeepSeek R1 (1.5B)** like ChatGPT  
-👉 **Retrieval-Augmented Generation (RAG)** – Ask questions about uploaded PDFs  
-👉 **Persistent Chat Memory** – AI retains chat history for seamless conversations  
-👉 **MySQL-Backed Chat History** – Stores past conversations for easy retrieval  
-👉 **Real-Time Sidebar Chat History** – Quickly access previous discussions  
-👉 **Auto-Generated Titles** – Organizes chat sessions efficiently  
-👉 **Smooth UI with Auto-Scrolling** – Fast and intuitive user experience  
+* LLM-based conversational AI (DeepSeek R1 via Ollama, Gemini via API)
+* Retrieval-Augmented Generation (RAG) for PDF Q\&A
+* Persistent chat history using Neon DB (PostgreSQL) and MySQL
+* Session titles and organized chat navigation
+* Searchable sidebar with previous chats
+* Smooth, responsive user interface
 
-## ⚙️ How It Works  
+## Tech Stack
 
-### 🔹 **1. LLM-Powered Chat**  
-- The chatbot uses **DeepSeek R1 (1.5B)**, a **Large Language Model (LLM)** optimized for **natural language understanding and generation**.  
-- Users can interact **just like ChatGPT**, receiving **intelligent responses** based on context.  
+| Component      | Technology                       |
+| -------------- | -------------------------------- |
+| Frontend       | Streamlit                        |
+| Backend        | Python                           |
+| LLMs           | DeepSeek R1 (Ollama), Gemini API |
+| RAG Retrieval  | FAISS                            |
+| PDF Processing | PyMuPDF / pdfplumber             |
+| Databases      | Neon DB (PostgreSQL), MySQL      |
 
-### 🔹 **2. RAG-Based PDF Q&A**  
-- Users can **upload PDFs** (e.g., reports, research papers, contracts).  
-- The system extracts text, converts it into **vector embeddings**, and stores it in **FAISS (vector search database)**.  
-- When users ask a question, the **retrieval module** finds the most relevant parts of the document.  
-- The **LLM (DeepSeek R1)** then generates a response **using both retrieved content & its general knowledge**.  
+## Setup Instructions
 
-### 🔹 **3. Efficient Chat History Management**  
-- **All chat messages** are stored in **MySQL**, linked to each user.  
-- The sidebar **displays past chat sessions**, enabling users to **resume conversations anytime**.  
-- A **search function** allows users to find **specific past interactions** quickly.  
+### 1. Clone the Repository
 
-## 🏰 Tech Stack  
-| Component   | Technology Used   |  
-|------------|------------------|  
-| **Frontend**  | Streamlit (UI Framework)  |  
-| **Backend**  | Python (FastAPI for Database Operations)  |  
-| **LLM (AI Model)**  | DeepSeek R1 (1.5B) via Ollama  |  
-| **Database**  | MySQL (Chat History & User Data)  |  
-| **RAG System**  | FAISS (Vector Database for Document Retrieval)  |  
-| **Authentication**  | Secure User Login System  |  
+```bash
+git clone https://github.com/Raihan2511/ChatRAG.git
+```
 
-## 📌 Installation Guide  
+### 2. Install Python Dependencies
 
-### 1️⃣ **Install Dependencies**  
-```bash  
-pip install -r requirements.txt  
-```  
+```bash
+pip install -r requirements.txt
+```
 
-### 2️⃣ **Start MySQL & Initialize Database**  
-Ensure MySQL is running and update **`config.py`** with your credentials:  
-```bash  
+### 3. Configure Your Environment
+
+Create a configuration file (e.g., `config.toml`, `.env`, or `.streamlit/secrets.toml`) to store your database URLs and API keys. This includes:
+
+* Neon DB connection URL
+* MySQL connection URL
+* Gemini API key
+
+**Note**: Do not hardcode credentials in your code. Use secure configuration management.
+
+### 4. Initialize the Database
+
+Run the script to set up necessary tables and schema:
+
+```bash
 python init_db.py
-```  
+```
 
-### 3️⃣ **Run DeepSeek R1 Locally**  
-Ensure **Ollama** and **DeepSeek R1** are installed:  
-```bash  
-ollama pull deepseek-r1:1.5b  
-ollama serve  
-```  
+### 5. Set Up the LLMs
 
-### 4️⃣ **Start the ChatGPT Clone**  
-```bash  
-streamlit run app.py  
-```  
+* Install and run DeepSeek R1 locally using [Ollama](https://ollama.ai/):
 
-## 📝 How to Use  
-1️⃣ **Sign Up & Log In** – Access the chat system.  
-2️⃣ **Chat with AI (LLM)** – Just like ChatGPT, but powered by **DeepSeek R1**.  
-3️⃣ **Upload a PDF** – Ask questions about it, and the **RAG system retrieves** relevant information.  
-4️⃣ **Resume Previous Conversations** – Click on a chat title in the sidebar.  
-5️⃣ **Search Past Chats** – Quickly find specific discussions.  
+```bash
+ollama pull deepseek-r1:1.5b
+ollama serve
+```
 
-## 🚀 Future Improvements  
-🔹 **Google Login Integration** for seamless authentication  
-🔹 **Voice-Based AI Chat** for hands-free interaction  
-🔹 **Multimodal AI (Images & Text)** to analyze both text and visuals  
-🔹 **Enhanced Response Personalization** based on user behavior  
+* Ensure your Gemini API access is set correctly in your configuration.
 
-## 💡 Contributing  
-Pull requests are welcome! Fork the repo and submit changes to improve the AI system.  
+### 6. Launch the Application
 
-## 🐝 License  
-This project is open-source under the **MIT License**. 
+```bash
+streamlit run app.py
+```
 
+## Usage
+
+1. Sign in or register to start a chat.
+2. Use the chat interface to ask open-ended questions.
+3. Upload a PDF file to enable document-based Q\&A.
+4. View and manage past conversations from the sidebar.
+5. Use the search feature to quickly find previous messages.
+
+## Configuration
+
+To keep credentials secure, store them in a configuration file. Here's an example format (do not include real values in public repositories):
+
+```toml
+[settings]
+NEON_DB_URL = "<your_neon_db_url>"
+MYSQL_DB_URL = "<your_mysql_url>"
+GEMINI_API_KEY = "<your_gemini_api_key>"
+```
+
+## Future Improvements
+
+* Google login integration
+* Voice command support
+* Multimodal input (images + text)
+* Custom LLM selector in UI
+* Admin analytics dashboard
+
+## Contributing
+
+Contributions are welcome. Please fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
