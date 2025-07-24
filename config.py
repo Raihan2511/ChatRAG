@@ -1,7 +1,10 @@
-import streamlit as st
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # MySQL Database Configuration
-DATABASE_URL = st.secrets["DATABASE_URL"]  # Use secrets for sensitive data
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set.")
