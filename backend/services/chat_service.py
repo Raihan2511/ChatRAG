@@ -111,7 +111,7 @@ def generate_response(user_input: str, user_id: int, use_rag=False, qa=None):
             response = qa(user_input)["result"]
         else:
             print("🔹 Sending request to Gemini...")
-            gemini_model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp")
+            gemini_model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-1219")
             messages = [{"role": "user", "parts": [user_input]}]
             response = gemini_model.generate_content(messages).text
             print(f"✅ Gemini Response: {response}")

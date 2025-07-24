@@ -112,7 +112,7 @@ def show():
 
         # ✅ Define LLM & Prompt
         # llm = Ollama(model="deepseek-r1:1.5b")
-        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-thinking-exp", google_api_key=api_key)
+        llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-thinking-exp-1219", google_api_key=api_key)
 
         prompt = """
         1. Use the following pieces of context to answer the question at the end.
