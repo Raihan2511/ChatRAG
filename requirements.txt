@@ -1,22 +1,22 @@
-# streamlit
-# sqlalchemy
-# passlib
-# python-dotenv
-# ollama
-# pymysql
-# mysql-connector-python
-# bcrypt
-# streamlit-google-auth
-# langchain
-# langchain-community
-# langchain-experimental
-# faiss-cpu
-# pdfplumber
-# torch
-# transformers
-# sentence-transformers
-# openai
-# genai
-# langchain-google-genai
-# google-generativeai
-psycopg2
+streamlit
+sqlalchemy
+passlib
+python-dotenv
+ollama
+pymysql
+mysql-connector-python
+bcrypt
+streamlit-google-auth
+langchain
+langchain-community
+langchain-experimental
+faiss-cpu
+pdfplumber
+torch
+transformers
+sentence-transformers
+openai
+genai
+langchain-google-genai
+google-generativeai
+psycopg2-binary
